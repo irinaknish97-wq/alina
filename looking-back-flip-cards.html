@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Looking back… | retell and advise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EAD3; --sheet:#FBF6E6; --ink:#2A2A1C; --muted:#66654D; --line:#D8CCA6;
+  --olive:#4E5A2B; --olive-d:#39421F; --gold:#AEA851; --terra:#A94A28; --teal:#2B5652; --ochre:#8A6A0F;
+  --a:#4E5A2B; --b:#A94A28; --c:#8A6A0F; --d:#2B5652;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.5}
+.wrap{max-width:940px;margin:0 auto;padding:28px 20px 90px}
+h1{font-size:clamp(36px,7vw,64px);line-height:1;font-weight:800;letter-spacing:-.035em;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 24px;font-size:19px;max-width:60ch}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+
+/* deck menu */
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:8px;margin-bottom:12px}
+.mi{position:relative;text-align:left;background:var(--sheet);border:1.5px solid var(--ink);border-radius:12px;padding:8px 12px;min-height:58px;cursor:pointer;line-height:1.25}
+.mi b{display:block;font-size:16px}
+.mi span{font-size:13px;color:var(--muted);font-family:'DM Mono',monospace}
+.mi[aria-current=true]{background:var(--ink);color:var(--sheet)}
+.mi[aria-current=true] span{color:#E3DAB8}
+.mi.done::after{content:'✓';position:absolute;top:6px;right:9px;font-weight:800;color:var(--olive)}
+.mi.done[aria-current=true]::after{color:var(--gold)}
+.mi[aria-current=true]:focus-visible{outline-color:var(--olive);outline-offset:3px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.score{font-family:'DM Mono',monospace;font-size:15px}
+.link{background:transparent;border:0;text-decoration:underline;cursor:pointer;min-height:44px;padding:0 6px;font-size:16px}
+
+/* card */
+.card{perspective:1600px;margin-bottom:18px;cursor:pointer}
+.inner{display:grid;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.3,.7,.2,1)}
+.card.flipped .inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:22px;padding:26px 28px 30px;min-height:500px}
+.front{background:var(--sheet);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--gold)}
+.back{background:var(--olive-d);color:var(--sheet);transform:rotateY(180deg);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--terra)}
+@media (prefers-reduced-motion:reduce){.inner{transition:none}}
+
+.meta{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.av{width:48px;height:48px;border-radius:50%;background:var(--terra);color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px;flex:none}
+.who b{display:block;font-size:20px;line-height:1.2}
+.who span{font-size:15px;color:var(--muted)}
+.ctx{margin-left:auto;font-family:'DM Mono',monospace;font-size:14px;border:1.5px solid var(--ink);border-radius:999px;padding:3px 14px}
+.story{font-size:clamp(18px,2.4vw,21px);line-height:1.62;margin:0}
+.story mark{background:none;color:inherit}
+.showhl .story mark{background:rgba(174,168,81,.5);border-radius:4px;padding:1px 3px}
+
+.back h2{font-size:clamp(26px,4vw,34px);letter-spacing:-.02em;line-height:1.1;margin:0 0 4px}
+.back .lead{color:#E3DAB8;margin:0 0 18px;font-size:17px}
+.step{display:grid;grid-template-columns:36px 1fr;gap:12px;margin-bottom:18px}
+.step .num{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;font-family:'DM Mono',monospace;font-weight:500;color:var(--gold)}
+.step h3{margin:0 0 2px;font-size:19px}
+.step p{margin:0;color:#EFE8CE;font-size:17px}
+.frames{display:grid;gap:8px;margin-top:10px}
+.fr{background:var(--sheet);color:var(--ink);border-left:8px solid var(--ink);border-radius:6px 12px 12px 6px;padding:8px 14px}
+.fr.a{border-color:var(--a)}.fr.b{border-color:var(--b)}.fr.c{border-color:var(--c)}.fr.d{border-color:var(--d)}
+.fr .t{font-size:19px;line-height:1.7}
+.fr code{display:block;font-family:'DM Mono',monospace;font-size:13px;color:var(--muted)}
+.bl{display:inline-block;min-width:4.2em;border-bottom:2px solid var(--ink);margin:0 3px;height:1.05em;vertical-align:-2px}
+.fr .k{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#fff;font-family:'DM Mono',monospace;font-size:15px;margin-right:8px;vertical-align:1px}
+.fr.a .k{background:var(--a)}.fr.b .k{background:var(--b)}.fr.c .k{background:var(--c)}.fr.d .k{background:var(--d)}
+.also{margin-top:8px!important;font-size:15px!important;color:#E3DAB8!important}
+
+/* controls */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{background:var(--olive);color:#fff;border:2px solid var(--olive);border-radius:999px;padding:11px 24px;font-weight:700;cursor:pointer;min-height:48px}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn.big{padding:12px 34px;font-size:19px}
+.btn.on{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.sp{flex:1}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <h1>Looking back…</h1>
+  <p class="sub">Read the story. Flip the card. Retell what happened, say how it could have gone differently, then give advice.</p>
+
+  <div class="menu" id="menu" aria-label="Choose a card"></div>
+  <div class="bar">
+    <span class="score" id="score" role="status"></span>
+    <button class="link" id="rand" type="button">Random card</button>
+    <button class="link" id="hl" type="button" aria-pressed="false">Show our language</button>
+  </div>
+
+  <div class="card" id="card">
+    <div class="inner">
+      <article class="face front" id="front"></article>
+      <article class="face back" id="back"></article>
+    </div>
+  </div>
+
+  <div class="ctrl">
+    <button class="btn alt" id="prev" type="button">← Previous</button>
+    <button class="btn big" id="flip" type="button">Flip the card</button>
+    <button class="btn alt" id="next" type="button">Next →</button>
+    <span class="sp"></span>
+    <button class="btn alt" id="done" type="button" aria-pressed="false">Mark as done</button>
+  </div>
+</div>
+
+<script>
+/* Language from the lists is wrapped in [[ ]] so it can be highlighted. */
+const CARDS=[
+ {name:'Olena',p:'she',o:'her',ctx:'Money',via:'Voice message',text:
+ "Okay, so, [[the thing is]], I'm [[not really into]] shopping. But last Friday I [[came across]] a skincare set online: a cleanser, a serum, the full routine. It was [[quite pricey]], almost [[four thousand hryvnias]], and it was a pure [[impulse purchase]]. I didn't read a single review. [[Turns out]], my skin hates it. I [[asked for a refund]], but the shop said the box was already open, so no. [[As for]] my savings, I had to [[dip into]] them to pay the rent, because I have no [[emergency fund]]. [[But other than that]], my budget was fine, [[and yet]] I [[end up spending more]] than I earn almost every month. Honestly, it really [[drains my wallet]]."},
+ {name:'Taras',p:'he',o:'him',ctx:'Money',via:'Voice message',text:
+ "[[Honestly]], I have no idea [[where my money goes]]. I'm not [[stingy]], and I earn decent money, but [[when it comes to]] food, I [[eat out]] a lot and [[get takeaways]] almost every night, because I'm too [[drained]] to cook. Most of [[my money goes on]] food and taxis. I never [[tracked my expenses]]; I just tapped my card. [[At some point]], I realized my account was empty, and I had nothing for a [[rainy day]]. [[The same goes for]] my savings: zero. I [[wonder]] how many people live like this. [[Once in a while]] it's [[no big deal]], but I [[kept]] doing it for a whole year, and now I [[can't afford]] the course I'm [[obsessed with]]."},
+ {name:'Dmytro',p:'he',o:'him',ctx:'Money',via:'Chat with a friend',text:
+ "I picked the cheaper laptop, because the price was [[reasonable]] and I'm a bit [[stingy]]. It wasn't [[costly, but it wasn't cheap either]]. [[Even though]] my friend told me to [[make an investment in]] a better one, I thought it [[wasn't worth]] the money. [[Turns out]], hers [[lasts longer]]. Mine slowed down after eight months, so I [[replace]] things [[more often]] than she does. [[In the long run]], I spent more. Hers is a real [[game-changer]] for her work, a total [[lifesaver]]. Mine doesn't [[live up to the hype]]. [[Other than that]], the screen is [[decent]]."},
+ {name:'Marta',p:'she',o:'her',ctx:'Wedding',via:'Coffee with a friend',text:
+ "My fiancé and I wanted a [[low-key]] wedding, something [[intimate]] with thirty people. By spring we were finally [[making progress]]; we just had to [[tie up loose ends]]. [[The thing is]], I kept [[putting off]] choosing a photographer. I told everyone, 'I'll [[get round to]] it.' When I finally did, every good one was booked, so we [[ended up hiring]] a friend of a friend. [[Fair enough]], he was [[decent]], but the photos came out [[generic]]. [[Despite]] all the stress, the day [[took place]] without a single problem. [[As far as I can tell]], nobody noticed, but I still [[catch myself thinking]] about those photos."},
+ {name:'Andrii',p:'he',o:'him',ctx:'Travel',via:'Voice message',text:
+ "[[I got a lot to tell you]]! I was flying to Croatia with friends, with [[a short layover]] in Vienna, a rental car, everything booked. I got to the airport at [[5 am]], and at [[customs]], [[unexpectedly]], the officer told me my passport expired two weeks ago. I didn't even know. [[I've been meaning to]] renew it for ages, but I kept [[putting it off]]. It was [[brutal]]. I had to [[receive a new passport]], which cost [[three hundred euros]], plus a new ticket, and my friends flew without me. [[If I'm being completely honest]], I couldn't [[pull myself together]] for a whole day. [[But other than that]], the city was nice. I [[made the most of]] it and went for [[a stroll]]."},
+ {name:'Sofia',p:'she',o:'her',ctx:'Work',via:'Talking to a colleague',text:
+ "[[The workload's been quite heavy]] on our ward lately. A colleague quit, so I agreed to take extra night shifts, and I said yes to every request. It was [[rough]]: every shift I had to [[get]] a hundred things [[done]], then I went home, slept two hours and tried to [[squeeze]] pilates [[into]] my schedule, but I [[couldn't keep up]]. I started to [[spiral over]] every tiny mistake. [[At this point]], I had no [[capacity]] left, I was completely [[drained]], and I [[ended up crying]] in the corridor. Nobody could [[fill in for me]], and I wasn't [[consistent]] with anything: not food, not sleep. Our [[days off line up]] only [[once in a while]]. [[Turns out]] I was pushing through the whole winter, and nobody noticed, me included."},
+ {name:'Kateryna',p:'she',o:'her',ctx:'Health',via:'Voice message',text:
+ "I'm trying to be [[consistent]] with my skincare, but [[when it comes to]] sunscreen, I [[can forget to apply]] it for days. Last summer I spent a week [[by the sea]], in the sun all day, and I didn't put on sunscreen once, because the weather wasn't that hot. [[Turns out]], the sun is strong even when it's cloudy. [[It's been]] six months [[since]] then, and I have dark spots on my cheeks. I [[find it hard to]] look at them. I finally [[got round to]] booking an appointment, and the doctor said it takes time. Honestly, [[it makes sense]]. [[Despite]] the price, the new cream is a real [[lifesaver]], but [[it takes a lot of effort]] every single morning."},
+ {name:'Alina',p:'she',o:'her',ctx:'Friends',via:'Voice message',text:
+ "[[It's been a while since]] I talked to my closest friend. She moved to Riga two years ago, and I kept saying, 'I'll call tomorrow': [[I've been meaning to]] for months. When she came to Kyiv, she [[popped in]] unexpectedly and asked, 'So, [[what have you been up to]]?' I had nothing to tell her, because I was so busy with work, and I dropped everybody. She said [[no big deal]], but it [[hit hard]]. [[Turns out]] she was having [[a rough few weeks]] with her dad, and I knew nothing. I asked how he was [[holding up]], and we [[caught up]] over coffee until midnight. [[That's a shame]]: I only called because she was in town."},
+ {name:'Mykola',p:'he',o:'him',ctx:'Home',via:'Chat with a friend',text:
+ "I moved into a new flat last autumn. The price was [[reasonable]] and the photos looked great. [[As for]] the details, I checked nothing: [[the power goes off]] every evening, there are mosquitoes everywhere, and the neighbours party until midnight. The landlord told me [[it's no big deal]] and never fixed anything. [[Despite]] all that, I signed a one-year contract and paid three months [[in advance]]. [[Pretty soon]], I was fed up. I tried to [[figure out]] how to break the contract, but they keep my deposit. [[The thing is]], I was [[in a rush]] and didn't read the small print. [[But other than that]], the location is great, [[and yet]] I'm not sleeping."},
+ {name:'Vlad',p:'he',o:'him',ctx:'Career',via:'Voice message',text:
+ "A recruiter contacted me about a job in Riga. I [[nailed]] the interview, the salary was good, and I was so excited that I accepted [[in a rush]], without asking about the workload. [[Turns out]], the office is far outside the city, and I spend three hours [[on the train]] every day. By the time I get home, I'm [[drained]]. The job doesn't [[live up to my expectations]]: [[in fact]], it's much more routine than they said. My colleagues are [[decent]], though. I keep telling myself it's [[an investment in]] my career, [[and yet]], [[at the end of the day]], I'm [[tired of saying]] 'it's fine'. [[I wonder]] if I will ever [[get round to]] looking for something else."},
+ {name:'Oksana',p:'she',o:'her',ctx:'Habits',via:'Note to self',text:
+ "[[Household chores piled up]] for a whole month. I [[kept putting off]] everything: the dishes, the laundry, the paperwork [[I've been meaning to]] do since spring. Every evening I told myself, 'I [[gotta get]] this [[done]]', and every evening I [[ended up scrolling]] reels until I started [[drifting off]]. Last Sunday I finally [[got round to]] sorting through my wardrobe, and I [[came across]] three tops with the tags still on, all [[pricey]], all impulse buys. It made me feel worse. I can [[figure out]] what to do; I just can't [[pull myself together]]. My sister says [[the same goes for]] her: when it comes to starting, she [[finds it hard]] too."},
+ {name:'Yulia',p:'she',o:'her',ctx:'Fitness',via:'Voice message',text:
+ "I'm trying to be [[consistent]] with pilates and English. In January I [[made an investment in]] a year at a studio: two hundred euros, [[quite costly]]. By February I [[couldn't keep up]], because I tried to [[fit]] classes [[into]] my schedule [[right after]] work, when I'm [[drained]]. [[Turns out]], the studio is on the other side of town. [[When it comes to]] English, I'm fine, but pilates: [[in total]], I went eleven times. [[Pretty soon]] the membership [[expired]], which is [[no big deal]], but I [[wonder]] where the money went. [[At this point]], I'm trying to [[make the most of]] home videos. They're [[handy]], and they cost nothing."}
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+function h(tag,attrs={},...kids){
+  const e=document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs)){
+    if(k==='class')e.className=v;
+    else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);
+    else if(v===true)e.setAttribute(k,'');
+    else if(v!==false&&v!=null)e.setAttribute(k,v);
+  }
+  for(const c of kids.flat()){ if(c==null||c===false)continue; e.append(c.nodeType?c:document.createTextNode(c)); }
+  return e;
+}
+function marked(text){
+  const out=[];const re=/\[\[(.+?)\]\]/g;let last=0,m;
+  while((m=re.exec(text))){ if(m.index>last)out.push(text.slice(last,m.index)); out.push(h('mark',{},m[1])); last=m.index+m[0].length; }
+  if(last<text.length)out.push(text.slice(last));
+  return out;
+}
+const B=()=>h('span',{class:'bl','aria-label':'blank'});
+
+/* ---------- state ---------- */
+let cur=0,flipped=false;
+const done=new Set();
+
+function frame(k,parts,formula){
+  return h('div',{class:'fr '+k},h('div',{class:'t'},h('span',{class:'k'},k),parts),h('code',{},formula));
+}
+
+function renderCard(){
+  const c=CARDS[cur];
+  $('#front').replaceChildren(
+    h('div',{class:'meta'},
+      h('div',{class:'av','aria-hidden':'true'},c.name[0]),
+      h('div',{class:'who'},h('b',{},c.name),h('span',{},c.via)),
+      h('span',{class:'ctx'},c.ctx)),
+    h('p',{class:'story'},marked(c.text)));
+  const n=c.name;
+  $('#back').replaceChildren(
+    h('h2',{},`Your turn: ${n}'s story`),
+    h('p',{class:'lead'},'Use your own words. Reuse the language we have learned.'),
+    h('div',{class:'step'},h('div',{class:'num'},'1'),h('div',{},
+      h('h3',{},'Retell it'),
+      h('p',{},`Tell ${n}'s story in the third person. What happened? What went wrong? What did it cost ${c.o}?`))),
+    h('div',{class:'step'},h('div',{class:'num'},'2'),h('div',{},
+      h('h3',{},'How could it have gone differently?'),
+      h('p',{},'Pick a frame, or mix them.'),
+      h('div',{class:'frames'},
+        frame('a',['If ',n,' had ',B(),', ',c.p,' would have ',B(),'.'],'if + had V3/ed, would/could/might have V3/ed'),
+        frame('b',['If ',n,' had ',B(),', ',c.p,' would ',B(),' now.'],'if + had V3/ed, would/could/might V'),
+        frame('c',['If only ',n,' had ',B(),'!'],'if only + had V3/ed')))),
+    h('div',{class:'step'},h('div',{class:'num'},'3'),h('div',{},
+      h('h3',{},`Now talk to ${n} and give advice`),
+      h('p',{},`Imagine ${n} is in front of you.`),
+      h('div',{class:'frames'},
+        frame('d',[`${n}, you should have `,B(),'.'],'should have + V3/ed')),
+      h('p',{class:'also'},'You can also use a, b or c with “you”: If you had …, you would …'))));
+  setFlip(false);
+  $('#done').classList.toggle('on',done.has(cur));
+  $('#done').setAttribute('aria-pressed',String(done.has(cur)));
+  $('#done').textContent=done.has(cur)?'Done ✓ (undo)':'Mark as done';
+  renderMenu();
+}
+
+function setFlip(v){
+  flipped=v;
+  $('#card').classList.toggle('flipped',v);
+  $('#front').inert=v;$('#back').inert=!v;
+  $('#front').setAttribute('aria-hidden',String(v));$('#back').setAttribute('aria-hidden',String(!v));
+  $('#flip').textContent=v?'Flip back to the story':'Flip the card';
+}
+
+function renderMenu(){
+  $('#menu').replaceChildren(...CARDS.map((c,i)=>h('button',{
+    class:'mi'+(done.has(i)?' done':''),type:'button','aria-current':String(i===cur),
+    'aria-label':`Card ${i+1}, ${c.name}, ${c.ctx}${done.has(i)?', done':''}`,
+    onclick:()=>go(i)},h('b',{},`${i+1}. ${c.name}`),h('span',{},c.ctx))));
+  $('#score').textContent=`${done.size} of ${CARDS.length} done`;
+}
+
+function go(i){cur=(i+CARDS.length)%CARDS.length;renderCard();}
+
+$('#flip').addEventListener('click',()=>setFlip(!flipped));
+$('#card').addEventListener('click',()=>{ if(String(window.getSelection()).length)return; setFlip(!flipped); });
+$('#prev').addEventListener('click',()=>go(cur-1));
+$('#next').addEventListener('click',()=>go(cur+1));
+$('#rand').addEventListener('click',()=>{let i;do{i=Math.floor(Math.random()*CARDS.length);}while(i===cur&&CARDS.length>1);go(i);});
+$('#done').addEventListener('click',()=>{done.has(cur)?done.delete(cur):done.add(cur);renderCard();});
+$('#hl').addEventListener('click',()=>{
+  const on=$('#app').classList.toggle('showhl');
+  $('#hl').textContent=on?'Hide our language':'Show our language';
+  $('#hl').setAttribute('aria-pressed',String(on));
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')go(cur+1);
+  if(e.key==='ArrowLeft')go(cur-1);
+});
+renderCard();
+</script>
+</body>
+</html>
